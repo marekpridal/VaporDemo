@@ -11,8 +11,8 @@ public func routes(_ router: Router) throws {
     }
     
     router.get("loop") { (_) -> String in
-        while true { print("Loop") }
-        return "true"
+        //while true { print("Loop") }
+        return "NOT in production"
     }
     
     let exchangeRatesController = ExchangeRatesController()
