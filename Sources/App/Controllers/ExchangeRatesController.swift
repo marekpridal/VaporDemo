@@ -11,25 +11,31 @@ import MySQL
 
 final class ExchangeRatesController {
     func list(_ req: Request) -> Future<[ExchangeRateResponseTO]> {
-        return req.withPooledConnection(to: .mysql) { (conn: MySQLConnection) -> EventLoopFuture<[ExchangeRateResponseTO]> in
-            return conn
-                .select()
-                .all()
-                .from(ExchangeRateResponseTO.self)
-                .all(decoding: ExchangeRateResponseTO.self)
-        }
+        return ExchangeRateResponseTO.query(on: req).all()
     }
     
     func exchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
         let requestObject = try! req.query.decode(ExchangeRateRequestTO.self)
-        return req.withPooledConnection(to: .mysql) { (conn: MySQLConnection) -> EventLoopFuture<ExchangeRateResponseTO> in
-            return conn
-                .select()
-                .all()
-                .from(ExchangeRateResponseTO.self)
-                .where(\ExchangeRateResponseTO.countryCode == requestObject.countryCode)
-                .first(decoding: ExchangeRateResponseTO.self)
-                .unwrap(or: Abort.init(.notFound))
-            }
+        return ExchangeRateResponseTO.find(requestObject.countryCode, on: req).unwrap(or: Abort.init(.notFound))
+    }
+    
+    func insertExchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
+        return try req.content.decode(ExchangeRateResponseTO.self).flatMap { rate in
+            return rate.create(on: req).map({ (result) in
+                return result
+            })
+        }
+    }
+    
+    func deleteExchangeRate(_ req: Request) throws -> Future<HTTPResponseStatus> {
+        return try req.content.decode(ExchangeRateResponseTO.self).flatMap({ rate in
+            return rate.delete(on: req).map { HTTPResponseStatus.accepted }
+        })
+    }
+    
+    func updateExchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
+        return try req.content.decode(ExchangeRateResponseTO.self).flatMap({ rate in
+            return rate.update(on: req)
+        })
     }
 }

@@ -24,4 +24,8 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let database = MySQLDatabase(config: databaseConfig)
     databases.add(database: database, as: .mysql)
     services.register(databases)
+    
+    var migrations = MigrationConfig()
+    migrations.add(model: ExchangeRateResponseTO.self, database: .mysql)
+    services.register(migrations)
 }

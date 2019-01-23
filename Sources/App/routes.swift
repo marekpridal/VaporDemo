@@ -18,4 +18,7 @@ public func routes(_ router: Router) throws {
     let exchangeRatesController = ExchangeRatesController()
     router.get("exchanges", use: exchangeRatesController.list)
     router.get("exchangeRate", use: exchangeRatesController.exchangeRate)
+    router.post("exchange", use: exchangeRatesController.insertExchangeRate)
+    router.put("updateExchangeRate", use: exchangeRatesController.updateExchangeRate)
+    router.delete("deleteExchangeRate", use: exchangeRatesController.deleteExchangeRate)
 }

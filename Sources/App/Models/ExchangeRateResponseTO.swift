@@ -19,14 +19,14 @@ final class ExchangeRateResponseTO: Model {
     
     static let entity = "exchange_rates"
     var countryCode: String?
-    let value: Float
-    let timestamp: Date
+    let value: Double
+    var timestamp: Date = Date()
     let priority: UInt
     
-    init(countryCode: String, value: Float, timestamp: Date, priority: UInt) {
+    init(countryCode: String, value: Double, timestamp: Date?, priority: UInt) {
         self.countryCode = countryCode
         self.value = value
-        self.timestamp = timestamp
+        self.timestamp = timestamp ?? Date()
         self.priority = priority
     }
     
@@ -36,9 +36,24 @@ final class ExchangeRateResponseTO: Model {
         case timestamp
         case priority
     }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        do {
+            self.countryCode = try container.decode(String.self, forKey: .countryCode)
+            self.value = try container.decode(Double.self, forKey: .value)
+            self.timestamp = try container.decodeIfPresent(Date.self, forKey: .timestamp) ?? Date()
+            self.priority = try container.decode(UInt.self, forKey: .priority)
+        } catch let e {
+            print(e)
+            throw e
+        }
+    }
 }
 
 extension ExchangeRateResponseTO: Content { }
+
+extension ExchangeRateResponseTO: MySQLMigration { }
 
 extension ExchangeRateResponseTO: SQLTable {
     static var sqlTableIdentifierString = "exchange_rates"
