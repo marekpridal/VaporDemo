@@ -20,15 +20,16 @@ final class ExchangeRatesController {
         }
     }
     
-    func exchangeRate(_ req: Request) -> Future<[ExchangeRateResponseTO]> {
+    func exchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
         let requestObject = try! req.query.decode(ExchangeRateRequestTO.self)
-        return req.withPooledConnection(to: .mysql) { (conn: MySQLConnection) -> EventLoopFuture<[ExchangeRateResponseTO]> in
+        return req.withPooledConnection(to: .mysql) { (conn: MySQLConnection) -> EventLoopFuture<ExchangeRateResponseTO> in
             return conn
                 .select()
                 .all()
                 .from(ExchangeRateResponseTO.self)
                 .where(\ExchangeRateResponseTO.countryCode == requestObject.countryCode)
-                .all(decoding: ExchangeRateResponseTO.self)
+                .first(decoding: ExchangeRateResponseTO.self)
+                .unwrap(or: Abort.init(.notFound))
             }
     }
 }
