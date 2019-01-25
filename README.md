@@ -30,12 +30,12 @@ Demo of using Swift for server app
 
 `/exchangeRate`
 
-<a href="/exchangeRate?countryCode=CZK" style="color:rgb(38, 180, 127);">Try 🙌</a>
+<a href="https://vapordemo.herokuapp.com/exchangeRate?countryCode=CZK" style="color:rgb(38, 180, 127);">Try 🙌</a>
 <h3 style="color:rgb(255, 203, 79);">POST</h3>
 
 `/exchange`
 
-<b>JSON BODY example</b><br>
+<b>JSON BODY example</b>
 
 ```
 {
@@ -52,7 +52,7 @@ Demo of using Swift for server app
 
 `/exchange`
 
-<b>JSON BODY example</b><br>
+<b>JSON BODY example</b>
 
 ```
 {
