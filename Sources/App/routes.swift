@@ -21,4 +21,7 @@ public func routes(_ router: Router) throws {
     router.post("exchange", use: exchangeRatesController.insertExchangeRate)
     router.put("updateExchangeRate", use: exchangeRatesController.updateExchangeRate)
     router.delete("deleteExchangeRate", use: exchangeRatesController.deleteExchangeRate)
+    
+    let viewController = ViewController()
+    router.get("/", use: viewController.welcomeView)
 }

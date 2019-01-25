@@ -1,5 +1,6 @@
 import Vapor
 import FluentMySQL
+import Leaf
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
@@ -13,6 +14,9 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(myService)
     
     try services.register(FluentMySQLProvider())
+    try services.register(LeafProvider())
+    
+    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
     
     var databases = DatabasesConfig()
     var databaseConfig: MySQLDatabaseConfig
