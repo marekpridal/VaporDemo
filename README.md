@@ -18,3 +18,50 @@
         <img src="http://img.shields.io/badge/swift-4.1-brightgreen.svg" alt="Swift 4.1">
     </a>
 </p>
+
+# VaporDemo
+Demo of using Swift for server app
+
+<section>
+<h3 style="color:rgb(38, 180, 127);">GET</h3>
+`/exchanges`
+<a href="https://vapordemo.herokuapp.com/exchanges" style="color:rgb(38, 180, 127);">Try 🙌</a>
+<br><br>
+`/exchangeRate`
+<a href="/exchangeRate?countryCode=CZK" style="color:rgb(38, 180, 127);">Try 🙌</a>
+<h3 style="color:rgb(255, 203, 79);">POST</h3>
+`/exchange`
+<a href="https://vapordemo.herokuapp.com/exchanges" style="color:rgb(255, 203, 79);">Try 🙌</a><br>
+<b>JSON BODY example</b><br>
+```
+{
+  "country_code":"EUR",
+  "value":1,
+  "timestamp":null,
+  "priority":1
+}
+```
+<h3 style="color:rgb(9, 123, 237);">PUT</h3>
+`/exchange`
+<a href="https://vapordemo.herokuapp.com/exchanges" style="color:rgb(9, 123, 237);">Try 🙌</a><br>
+<b>JSON BODY example</b><br>
+```
+{
+  "country_code":"CZK",
+  "value":25.644444,
+  "timestamp":null,
+  "priority":1
+}
+```
+<h3 style="color:rgb(237, 75, 72);">DELETE</h3>
+`/exchange`
+<a href="https://vapordemo.herokuapp.com/deleteExchangeRate" style="color:rgb(237, 75, 72);">Try 🙌</a><br>
+<b>JSON BODY example</b><br>
+```
+{
+  "country_code":"CZK",
+  "value":25.644444,
+  "timestamp":null,
+  "priority":1
+}
+```
