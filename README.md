@@ -69,7 +69,7 @@ Demo of using Swift for server app
 
 `/exchange`
 
-<b>JSON BODY example
+<b>JSON BODY example</b>
 
 ```
 {
@@ -80,4 +80,4 @@ Demo of using Swift for server app
 }
 ```
 
-<a href="https://vapordemo.herokuapp.com/deleteExchangeRate" style="color:rgb(237, 75, 72);">Try 🙌</a><
+<a href="https://vapordemo.herokuapp.com/deleteExchangeRate" style="color:rgb(237, 75, 72);">Try 🙌</a>
