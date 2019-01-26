@@ -20,7 +20,7 @@ final class ExchangeRateResponseTO: Model {
     static let entity = "exchange_rates"
     var countryCode: String?
     let value: Double
-    var timestamp: Date = Date()
+    let timestamp: Date
     let priority: UInt
     
     init(countryCode: String, value: Double, timestamp: Date?, priority: UInt) {
