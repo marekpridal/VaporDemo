@@ -21,9 +21,10 @@ final class ExchangeRatesController {
     
     func insertExchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
         return try req.content.decode(ExchangeRateResponseTO.self).flatMap { rate in
-            return rate.create(on: req).map({ (result) in
-                return result
-            })
+            ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).map({ existing in return (rate,existing != nil) }).flatMap({ (rate, exists) -> EventLoopFuture<ExchangeRateResponseTO> in
+                    guard !exists else { throw Abort(.conflict) }
+                    return rate.create(on: req)
+                })
         }
     }
     
