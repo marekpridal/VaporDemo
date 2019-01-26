@@ -8,16 +8,16 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let router = EngineRouter.default()
     try routes(router)
     services.register(router, as: Router.self)
-    
+
     // Use port 8001
     let myService = NIOServerConfig.default(port: 8001)
     services.register(myService)
-    
+
     try services.register(FluentMySQLProvider())
     try services.register(LeafProvider())
-    
+
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)
-    
+
     var databases = DatabasesConfig()
     var databaseConfig: MySQLDatabaseConfig
     if env.isRelease {
@@ -38,7 +38,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let database = MySQLDatabase(config: databaseConfig)
     databases.add(database: database, as: .mysql)
     services.register(databases)
-    
+
     var migrations = MigrationConfig()
     migrations.add(model: ExchangeRateResponseTO.self, database: .mysql)
     services.register(migrations)

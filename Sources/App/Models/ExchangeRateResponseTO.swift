@@ -9,34 +9,38 @@ import FluentMySQL
 import Vapor
 
 final class ExchangeRateResponseTO: Model {
-    
+    /// Table name
+    static let entity = "exchange_rates"
+
     /// See `Model.ID`
     typealias ID = String
-    
+
+    /// Database type
+    typealias Database = MySQLDatabase
+
     /// See `Model.idKey`
     static let idKey: IDKey = \.countryCode
-    typealias Database = MySQLDatabase
-    
-    static let entity = "exchange_rates"
+
     var countryCode: String?
+
     let value: Double
     let timestamp: Date
     let priority: UInt
-    
+
     init(countryCode: String, value: Double, timestamp: Date?, priority: UInt) {
         self.countryCode = countryCode
         self.value = value
         self.timestamp = timestamp ?? Date()
         self.priority = priority
     }
-    
+
     private enum CodingKeys: String, CodingKey {
         case countryCode = "country_code"
         case value
         case timestamp
         case priority
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         do {

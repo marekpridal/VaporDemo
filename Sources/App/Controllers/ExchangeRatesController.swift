@@ -13,21 +13,23 @@ final class ExchangeRatesController {
     func list(_ req: Request) -> Future<[ExchangeRateResponseTO]> {
         return ExchangeRateResponseTO.query(on: req).all()
     }
-    
+
     func exchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
-        let requestObject = try! req.query.decode(ExchangeRateRequestTO.self)
+        guard let requestObject = try? req.query.decode(ExchangeRateRequestTO.self) else {
+            throw Abort(.badRequest)
+        }
         return ExchangeRateResponseTO.find(requestObject.countryCode, on: req).unwrap(or: Abort.init(.notFound))
     }
-    
+
     func insertExchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
         return try req.content.decode(ExchangeRateResponseTO.self).flatMap { rate in
-            ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).map({ existing in return (rate,existing != nil) }).flatMap({ (rate, exists) -> EventLoopFuture<ExchangeRateResponseTO> in
+            ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).map({ existing in return (rate, existing != nil) }).flatMap({ (rate, exists) -> EventLoopFuture<ExchangeRateResponseTO> in
                     guard !exists else { throw Abort(.conflict) }
                     return rate.create(on: req)
                 })
         }
     }
-    
+
     func deleteExchangeRate(_ req: Request) throws -> Future<HTTPResponseStatus> {
         return try req.content.decode(ExchangeRateResponseTO.self).flatMap({ rate in
             ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).unwrap(or: Abort.init(.notFound)).flatMap({ (rate: ExchangeRateResponseTO) -> (EventLoopFuture<HTTPResponseStatus>) in
@@ -37,7 +39,7 @@ final class ExchangeRatesController {
             })
         })
     }
-    
+
     func updateExchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
         return try req.content.decode(ExchangeRateResponseTO.self).flatMap({ rate in
             ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).unwrap(or: Abort.init(.notFound)).flatMap({ (rate) -> (EventLoopFuture<(ExchangeRateResponseTO)>) in
