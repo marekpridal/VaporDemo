@@ -53,7 +53,17 @@ final class ExchangeRateResponseTO: Model {
 
 extension ExchangeRateResponseTO: Content { }
 
-extension ExchangeRateResponseTO: MySQLMigration { }
+extension ExchangeRateResponseTO: MySQLMigration {
+    /**
+     If table already exists, implement this method for first migration to create fluent table and enabling automatic migration.
+     After first migration disable it, it should work OK 🙂
+     */
+    /*
+    static func prepare(on conn: MySQLConnection) -> Future<Void> {
+         return conn.future()
+    }
+     */
+}
 
 extension ExchangeRateResponseTO: SQLTable {
     static var sqlTableIdentifierString = "exchange_rates"
