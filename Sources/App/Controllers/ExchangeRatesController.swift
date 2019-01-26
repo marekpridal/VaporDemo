@@ -29,7 +29,11 @@ final class ExchangeRatesController {
     
     func deleteExchangeRate(_ req: Request) throws -> Future<HTTPResponseStatus> {
         return try req.content.decode(ExchangeRateResponseTO.self).flatMap({ rate in
-            return rate.delete(on: req).map { HTTPResponseStatus.accepted }
+            ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).unwrap(or: Abort.init(.notFound)).flatMap({ (rate: ExchangeRateResponseTO) -> (EventLoopFuture<HTTPResponseStatus>) in
+                return rate
+                    .delete(on: req)
+                    .map { _ -> HTTPResponseStatus in return HTTPResponseStatus.accepted }
+            })
         })
     }
     
