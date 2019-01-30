@@ -31,7 +31,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
                                                  port: 3306,
                                                  username: "root",
                                                  password: "root",
-                                                 database: "vydaje",
+                                                 database: "exchanges_database",
                                                  transport: MySQLTransportConfig.unverifiedTLS)
 
     }
