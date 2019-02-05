@@ -26,11 +26,11 @@ Demo of using Swift for server app
 
 `/exchanges`
 
-<a href="http://vapordemo.marekpridal.eu/exchanges" style="color:rgb(38, 180, 127);">Try 🙌</a>
+<a href="https://vapordemo.marekpridal.eu/exchanges" style="color:rgb(38, 180, 127);">Try 🙌</a>
 
 `/exchangeRate`
 
-<a href="http://vapordemo.marekpridal.eu/exchangeRate?countryCode=CZK" style="color:rgb(38, 180, 127);">Try 🙌</a>
+<a href="https://vapordemo.marekpridal.eu/exchangeRate?countryCode=CZK" style="color:rgb(38, 180, 127);">Try 🙌</a>
 <h3 style="color:rgb(255, 203, 79);">POST</h3>
 
 `/exchange`
@@ -46,7 +46,7 @@ Demo of using Swift for server app
 }
 ```
 
-<a href="http://vapordemo.marekpridal.eu/exchange" style="color:rgb(255, 203, 79);">Try 🙌</a>
+<a href="https://vapordemo.marekpridal.eu/exchange" style="color:rgb(255, 203, 79);">Try 🙌</a>
 
 <h3 style="color:rgb(9, 123, 237);">PUT</h3>
 
@@ -63,7 +63,7 @@ Demo of using Swift for server app
 }
 ```
 
-<a href="http://vapordemo.marekpridal.eu/updateExchangeRate" style="color:rgb(9, 123, 237);">Try 🙌</a>
+<a href="https://vapordemo.marekpridal.eu/updateExchangeRate" style="color:rgb(9, 123, 237);">Try 🙌</a>
 
 <h3 style="color:rgb(237, 75, 72);">DELETE</h3>
 
@@ -80,4 +80,4 @@ Demo of using Swift for server app
 }
 ```
 
-<a href="http://vapordemo.marekpridal.eu/deleteExchangeRate" style="color:rgb(237, 75, 72);">Try 🙌</a>
+<a href="https://vapordemo.marekpridal.eu/deleteExchangeRate" style="color:rgb(237, 75, 72);">Try 🙌</a>
