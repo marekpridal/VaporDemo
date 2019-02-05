@@ -42,7 +42,7 @@ final class ExchangeRatesController {
 
     func updateExchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
         return try req.content.decode(ExchangeRateResponseTO.self).flatMap({ rate in
-            ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).unwrap(or: Abort.init(.notFound)).flatMap({ (rate) -> (EventLoopFuture<(ExchangeRateResponseTO)>) in
+            ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).unwrap(or: Abort.init(.notFound)).flatMap({ (_) -> (EventLoopFuture<(ExchangeRateResponseTO)>) in
                 return rate.update(on: req)
             })
         })
