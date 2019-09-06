@@ -21,6 +21,7 @@
     <section>
     <h3 style="color:rgb(38, 180, 127);">GET</h3>
     <ul>
+        <li><a href="/requestDebugDescription">/requestDebugDescription</a></li>
         <li><a href="/exchanges">/exchanges</a></li>
         <li><a href="/exchangeRate?countryCode=CZK">/exchangeRate?countryCode=CZK</a></li>
     </ul>

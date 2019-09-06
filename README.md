@@ -24,6 +24,10 @@ Demo of using Swift for server app
 
 <h3 style="color:rgb(38, 180, 127);">GET</h3>
 
+`/requestDebugDescription`
+
+<a href="http://vapordemo.marekpridal.eu/requestDebugDescription" style="color:rgb(38, 180, 127);">Try 🙌</a>
+
 `/exchanges`
 
 <a href="http://vapordemo.marekpridal.eu/exchanges" style="color:rgb(38, 180, 127);">Try 🙌</a>
