@@ -14,6 +14,10 @@ public func routes(_ router: Router) throws {
         //while true { print("Loop") }
         return "NOT in production"
     }
+    
+    router.get("requestDebugDescription") { (request) -> String in
+        return request.debugDescription
+    }
 
     let exchangeRatesController = ExchangeRatesController()
     router.get("exchanges", use: exchangeRatesController.list)
