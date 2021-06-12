@@ -19,7 +19,8 @@ public func configure(_ app: Application) throws {
                                             port: Int(Environment.get("JAWSDB_PORT")!)!,
                                             username: Environment.get("JAWSDB_USERNAME")!,
                                             password: Environment.get("JAWSDB_PASSWORD")!,
-                                            database: Environment.get("JAWSDB_DATABASE")!)
+                                            database: Environment.get("JAWSDB_DATABASE")!,
+                                            tlsConfiguration: .forClient(certificateVerification: .none))
     } else {
         databaseConfig = MySQLConfiguration(hostname: "127.0.0.1",
                                             port: 3306,
