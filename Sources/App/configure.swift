@@ -1,45 +1,38 @@
 import Vapor
-import FluentMySQL
+import Fluent
+import FluentMySQLDriver
 import Leaf
 
 /// Called before your application initializes.
-public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
-    // Register routes to the router
-    let router = EngineRouter.default()
-    try routes(router)
-    services.register(router, as: Router.self)
+public func configure(_ app: Application) throws {
 
     // Use port 8001
-    let myService = NIOServerConfig.default(port: 8001)
-    services.register(myService)
+    app.http.server.configuration.port = 8001
+    
+    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
-    try services.register(FluentMySQLProvider())
-    try services.register(LeafProvider())
+    app.views.use(.leaf)
 
-    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
-
-    var databases = DatabasesConfig()
-    var databaseConfig: MySQLDatabaseConfig
-    if env.isRelease {
-        databaseConfig = MySQLDatabaseConfig(hostname: Environment.get("JAWSDB_URL")!,
-                                             port: Int(Environment.get("JAWSDB_PORT")!)!,
-                                             username: Environment.get("JAWSDB_USERNAME")!,
-                                             password: Environment.get("JAWSDB_PASSWORD")!,
-                                             database: Environment.get("JAWSDB_DATABASE")!)
+    var databaseConfig: MySQLConfiguration
+    if app.environment.isRelease {
+        databaseConfig = MySQLConfiguration(hostname: Environment.get("JAWSDB_URL")!,
+                                            port: Int(Environment.get("JAWSDB_PORT")!)!,
+                                            username: Environment.get("JAWSDB_USERNAME")!,
+                                            password: Environment.get("JAWSDB_PASSWORD")!,
+                                            database: Environment.get("JAWSDB_DATABASE")!)
     } else {
-        databaseConfig = MySQLDatabaseConfig(hostname: "127.0.0.1",
-                                                 port: 3306,
-                                                 username: "root",
-                                                 password: "root",
-                                                 database: "exchanges_database",
-                                                 transport: MySQLTransportConfig.unverifiedTLS)
+        databaseConfig = MySQLConfiguration(hostname: "127.0.0.1",
+                                            port: 3306,
+                                            username: "root",
+                                            password: "root",
+                                            database: "exchanges_database",
+                                            tlsConfiguration: .forClient(certificateVerification: .none))
 
     }
-    let database = MySQLDatabase(config: databaseConfig)
-    databases.add(database: database, as: .mysql)
-    services.register(databases)
 
-    var migrations = MigrationConfig()
-    migrations.add(model: ExchangeRateResponseTO.self, database: .mysql)
-    services.register(migrations)
+    app.databases.use(.mysql(configuration: databaseConfig), as: .mysql)
+    
+    app.migrations.add(ExchangeRateResponseTO())
+
+    try routes(app)
 }

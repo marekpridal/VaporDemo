@@ -5,27 +5,34 @@
 //  Created by Marek Pridal on 22.01.19.
 //
 
-import FluentMySQL
+import Fluent
+import FluentMySQLDriver
 import Vapor
 
-final class ExchangeRateResponseTO: Model {
+final class ExchangeRateResponseTO: Model, Content {
     /// Table name
-    static let entity = "exchange_rates"
+    static let schema = "exchange_rates"
 
-    /// See `Model.ID`
-    typealias ID = String
+    @ID(custom: "country_code")
+    var id: String?
 
-    /// Database type
-    typealias Database = MySQLDatabase
-
-    /// See `Model.idKey`
-    static let idKey: IDKey = \.countryCode
-
-    var countryCode: String?
-
-    let value: Double
-    let timestamp: Date
-    let priority: UInt
+    @Field(key: "value")
+    var value: Double
+    @Field(key: "timestamp")
+    var timestamp: Date
+    @Field(key: "priority")
+    var priority: UInt
+    
+    var countryCode: String? {
+        get {
+            id
+        }
+        set {
+            id = newValue
+        }
+    }
+    
+    init() { }
 
     init(countryCode: String, value: Double, timestamp: Date?, priority: UInt) {
         self.countryCode = countryCode
@@ -55,20 +62,21 @@ final class ExchangeRateResponseTO: Model {
     }
 }
 
-extension ExchangeRateResponseTO: Content { }
+//extension ExchangeRateResponseTO: Content { }
 
-extension ExchangeRateResponseTO: MySQLMigration {
-    /**
-     If table already exists, implement this method for first migration to create fluent table and enabling automatic migration.
-     After first migration disable it, it should work OK 🙂
-     */
-    /*
-    static func prepare(on conn: MySQLConnection) -> Future<Void> {
-         return conn.future()
+extension ExchangeRateResponseTO: Migration {
+    func prepare(on database: Database) -> EventLoopFuture<Void> {
+        return database
+            .schema(Self.schema)
+            .field("country_code", .string, .required)
+            .field("value", .string, .required)
+            .field("timestamp", .string, .required)
+            .field("priority", .string, .required)
+            .unique(on: "country_code")
+            .create()
     }
-     */
-}
 
-extension ExchangeRateResponseTO: SQLTable {
-    static var sqlTableIdentifierString = "exchange_rates"
+    func revert(on database: Database) -> EventLoopFuture<Void> {
+        return database.schema(Self.schema).delete()
+    }
 }

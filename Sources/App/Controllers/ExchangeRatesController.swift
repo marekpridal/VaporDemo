@@ -6,45 +6,44 @@
 //
 
 import Vapor
-import FluentMySQL
-import MySQL
+import FluentMySQLDriver
 
 final class ExchangeRatesController {
-    func list(_ req: Request) -> Future<[ExchangeRateResponseTO]> {
-        return ExchangeRateResponseTO.query(on: req).all()
+    func list(_ req: Request) -> EventLoopFuture<[ExchangeRateResponseTO]> {
+        return ExchangeRateResponseTO.query(on: req.db).all()
     }
 
-    func exchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
-        guard let requestObject = try? req.query.decode(ExchangeRateRequestTO.self) else {
-            throw Abort(.badRequest)
+    func exchangeRate(_ req: Request) throws -> EventLoopFuture<ExchangeRateResponseTO> {
+        let requestObject = try req.query.decode(ExchangeRateRequestTO.self)
+        return ExchangeRateResponseTO.find(requestObject.countryCode, on: req.db).unwrap(or: Abort.init(.notFound))
+    }
+
+    func insertExchangeRate(_ req: Request) throws -> EventLoopFuture<ExchangeRateResponseTO> {
+        let request = try req.content.decode(ExchangeRateResponseTO.self)
+        
+        return ExchangeRateResponseTO
+                .find(request.countryCode, on: req.db)
+                .guard({ $0 == nil }, else: Abort(.conflict))
+                .flatMap { _ in
+                    return request.save(on: req.db).flatMap { _ in
+                        ExchangeRateResponseTO.find(request.countryCode, on: req.db).unwrap(or: Abort(.internalServerError))
+                    }
+                }
+    }
+
+    func deleteExchangeRate(_ req: Request) throws -> EventLoopFuture<HTTPResponseStatus> {
+        let request = try req.content.decode(ExchangeRateResponseTO.self)
+        
+        return ExchangeRateResponseTO.find(request.countryCode, on: req.db).unwrap(or: Abort(.notFound)).flatMap { rate in
+            rate.delete(on: req.db).transform(to: HTTPResponseStatus.accepted)
         }
-        return ExchangeRateResponseTO.find(requestObject.countryCode, on: req).unwrap(or: Abort.init(.notFound))
     }
 
-    func insertExchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
-        return try req.content.decode(ExchangeRateResponseTO.self).flatMap { rate in
-            ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).map({ existing in return (rate, existing != nil) }).flatMap({ (rate, exists) -> EventLoopFuture<ExchangeRateResponseTO> in
-                    guard !exists else { throw Abort(.conflict) }
-                    return rate.create(on: req)
-                })
+    func updateExchangeRate(_ req: Request) throws -> EventLoopFuture<ExchangeRateResponseTO> {
+        let request = try req.content.decode(ExchangeRateResponseTO.self)
+        
+        return ExchangeRateResponseTO.find(request.countryCode, on: req.db).unwrap(or: Abort(.notFound)).flatMap { _ in
+            request.update(on: req.db).transform(to: request)
         }
-    }
-
-    func deleteExchangeRate(_ req: Request) throws -> Future<HTTPResponseStatus> {
-        return try req.content.decode(ExchangeRateResponseTO.self).flatMap({ rate in
-            ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).unwrap(or: Abort.init(.notFound)).flatMap({ (rate: ExchangeRateResponseTO) -> (EventLoopFuture<HTTPResponseStatus>) in
-                return rate
-                    .delete(on: req)
-                    .map { _ -> HTTPResponseStatus in return HTTPResponseStatus.accepted }
-            })
-        })
-    }
-
-    func updateExchangeRate(_ req: Request) throws -> Future<ExchangeRateResponseTO> {
-        return try req.content.decode(ExchangeRateResponseTO.self).flatMap({ rate in
-            ExchangeRateResponseTO.find(rate.countryCode ?? "", on: req).unwrap(or: Abort.init(.notFound)).flatMap({ (_) -> (EventLoopFuture<(ExchangeRateResponseTO)>) in
-                return rate.update(on: req)
-            })
-        })
     }
 }
