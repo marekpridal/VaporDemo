@@ -23,8 +23,8 @@ public func routes(_ app: Application) throws {
     app.get("exchanges", use: exchangeRatesController.list)
     app.get("exchangeRate", use: exchangeRatesController.exchangeRate)
     app.post("exchange", use: exchangeRatesController.insertExchangeRate)
-    app.put("updateExchangeRate", use: exchangeRatesController.updateExchangeRate)
-    app.delete("deleteExchangeRate", use: exchangeRatesController.deleteExchangeRate)
+    app.put("exchange", use: exchangeRatesController.updateExchangeRate)
+    app.delete("exchange", use: exchangeRatesController.deleteExchangeRate)
 
     let viewController = ViewController()
     app.get("", use: viewController.welcomeView)
