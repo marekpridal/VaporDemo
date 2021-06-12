@@ -9,7 +9,7 @@ import Fluent
 import FluentMySQLDriver
 import Vapor
 
-final class ExchangeRateResponseTO: Model, Content {
+final class ExchangeRateResponseTO: Model {
     /// Table name
     static let schema = "exchange_rates"
 
@@ -69,7 +69,7 @@ final class ExchangeRateResponseTO: Model, Content {
     }
 }
 
-//extension ExchangeRateResponseTO: Content { }
+extension ExchangeRateResponseTO: Content { }
 
 extension ExchangeRateResponseTO: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
