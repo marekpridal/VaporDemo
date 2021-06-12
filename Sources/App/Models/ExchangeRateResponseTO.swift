@@ -60,6 +60,13 @@ final class ExchangeRateResponseTO: Model, Content {
             throw e
         }
     }
+    
+    func update(newValue: ExchangeRateResponseTO) -> Self {
+        self.value = newValue.value
+        self.timestamp = newValue.timestamp
+        self.priority = newValue.priority
+        return self
+    }
 }
 
 //extension ExchangeRateResponseTO: Content { }
