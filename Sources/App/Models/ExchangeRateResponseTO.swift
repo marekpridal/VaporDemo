@@ -76,9 +76,9 @@ extension ExchangeRateResponseTO: Migration {
         return database
             .schema(Self.schema)
             .field("country_code", .string, .required)
-            .field("value", .string, .required)
-            .field("timestamp", .string, .required)
-            .field("priority", .string, .required)
+            .field("value", .double, .required)
+            .field("timestamp", .datetime, .required)
+            .field("priority", .uint, .required)
             .unique(on: "country_code")
             .create()
     }
