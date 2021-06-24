@@ -8,7 +8,7 @@
 import Vapor
 
 final class ViewController {
-    func welcomeView(_ req: Request) throws -> Future<View> {
-        return try req.view().render("Welcome")
+    func welcomeView(_ req: Request) throws -> EventLoopFuture<View> {
+        return req.view.render("Welcome")
     }
 }
